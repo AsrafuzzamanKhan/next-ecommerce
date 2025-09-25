@@ -21,7 +21,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en">
         <body className={`${outfit.className} antialiased text-gray-700`}>
           <Toaster />
           <AppContextProvider>{children}</AppContextProvider>
