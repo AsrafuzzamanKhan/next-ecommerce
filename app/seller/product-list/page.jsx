@@ -5,22 +5,46 @@ import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import Footer from "@/components/seller/Footer";
 import Loading from "@/components/Loading";
+import axios from "axios";
 
 const ProductList = () => {
 
-  const { router } = useAppContext()
+  const { router, getToken, user } = useAppContext()
 
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
 
   const fetchSellerProduct = async () => {
-    setProducts(productsDummyData)
-    setLoading(false)
+    // setProducts(productsDummyData)
+    // setLoading(false)
+    try {
+      const token = await getToken();
+      const { data } = await axios.get('/api/product/seller-list', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      console.log("API response:", data);
+      if (data.success) {
+        setProducts(data.products)
+        setLoading(false)
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Something went wrong" + error.message);
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
-    fetchSellerProduct();
-  }, [])
+    console.log("User context:", user);
+    if (user) {
+      fetchSellerProduct();
+    }
+
+  }, [user])
 
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">

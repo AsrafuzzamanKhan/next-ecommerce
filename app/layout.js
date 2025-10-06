@@ -10,6 +10,8 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const outfit = Outfit({ subsets: ["latin"], weight: ["300", "400", "500"] });
 
@@ -24,7 +26,12 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <body className={`${outfit.className} antialiased text-gray-700`}>
           <Toaster />
-          <AppContextProvider>{children}</AppContextProvider>
+
+          <AppContextProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </AppContextProvider>
         </body>
       </html>
     </ClerkProvider>

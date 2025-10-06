@@ -24,7 +24,19 @@ export const AppContextProvider = (props) => {
     const [cartItems, setCartItems] = useState({})
 
     const fetchProductData = async () => {
-        setProducts(productsDummyData)
+        // setProducts(productsDummyData)
+        try {
+            const { data } = await axios.get('/api/product/list')
+            if (data.success) {
+                setProducts(data.products)
+            }
+            else {
+                toast.error(data.message)
+            }
+        }
+        catch (error) {
+            toast.error(error.message)
+        }
     }
 
     const fetchUserData = async () => {
@@ -49,7 +61,7 @@ export const AppContextProvider = (props) => {
                 toast.error(data.message)
             }
         } catch (error) {
-            toast.error9 = (error.message)
+            toast.error = (error.message)
             console.log("Error fetching user data:", error);
         }
     }
@@ -67,6 +79,22 @@ export const AppContextProvider = (props) => {
         }
         setCartItems(cartData);
 
+
+        //update cart in database   
+        if (user) {
+            try {
+                const token = await getToken();
+                const { data } = await axios.post('/api/cart/update', { cartData }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                toast.success("Item added to cart");
+            } catch (error) {
+                toast.error("Error adding to cart: " + error.message);
+            }
+
+        }
     }
 
 
@@ -79,6 +107,21 @@ export const AppContextProvider = (props) => {
             cartData[itemId] = quantity;
         }
         setCartItems(cartData)
+        //update cart in database   
+        if (user) {
+            try {
+                const token = await getToken();
+                const { data } = await axios.post('/api/cart/update', { cartData }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                toast.success("Cart updated");
+            } catch (error) {
+                toast.error("Error adding to cart: " + error.message);
+            }
+
+        }
 
     }
 

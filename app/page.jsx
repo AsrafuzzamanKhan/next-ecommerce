@@ -11,15 +11,15 @@ import Footer from "@/components/Footer";
 const Home = () => {
   return (
     <>
-      <Navbar/>
+      {/* <Navbar /> */}
       <div className="px-6 md:px-16 lg:px-32">
-        <HeaderSlider />
+        {/* <HeaderSlider /> */}
         <HomeProducts />
-        <FeaturedProduct />
-        <Banner />
-        <NewsLetter />
+        {/* <FeaturedProduct /> */}
+        {/* <Banner /> */}
+        {/* <NewsLetter /> */}
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };
