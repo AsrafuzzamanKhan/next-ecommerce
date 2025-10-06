@@ -15,10 +15,16 @@ export async function POST(request) {
       );
     }
     //calculate ammount using items
-    const amount = items.reduce(async (acc, item) => {
+    // const amount = items.reduce(async (acc, item) => {
+    //   const product = await Product.findById(item.product);
+    //   return acc + product.offerPrice * item.quantity;
+    // }, 0);
+    // ...existing code...
+    let amount = 0;
+    for (const item of items) {
       const product = await Product.findById(item.product);
-      return acc + product.offerPrice * item.quantity;
-    }, 0);
+      amount += product.offerPrice * item.quantity;
+    }
     await inngest.send({
       name: "order Created",
       data: {
