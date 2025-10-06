@@ -12,7 +12,7 @@
     "@clerk/nextjs": "^6.32.2",
     "axios": "^1.12.2",
     "cloudinary": "^2.7.0",
-    "inngest": "^3.42.3",
+    "inngest": "^3.44.1",
     "lucide-react": "^0.544.0",
     "mongoose": "^8.18.2",
     "motion": "^12.23.22",
