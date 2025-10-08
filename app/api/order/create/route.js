@@ -1,3 +1,4 @@
+import connectDB from "@/config/db";
 import { inngest } from "@/config/inngest";
 import Product from "@/models/Product";
 import User from "@/models/User";
@@ -6,9 +7,17 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
+    await connectDB();
     const { userId } = getAuth(request);
+    if (!userId) {
+      console.log("No userId found");
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
     const { items, address } = await request.json();
-    if (!address || items.length === 0) {
+    if (!address || !items || items.length === 0) {
       return NextResponse.json(
         { success: false, message: "All fields are required" },
         { status: 400 }
@@ -17,16 +26,23 @@ export async function POST(request) {
     //calculate ammount using items
     // const amount = items.reduce(async (acc, item) => {
     //   const product = await Product.findById(item.product);
-    //   return acc + product.offerPrice * item.quantity;
+    //   return (await acc) + product.offerPrice * item.quantity;
     // }, 0);
-    // ...existing code...
+    // Calculate amount using items (use for...of for async)
     let amount = 0;
     for (const item of items) {
       const product = await Product.findById(item.product);
+      if (!product) {
+        console.log("Product not found:", item.product);
+        return NextResponse.json(
+          { success: false, message: `Product not found: ${item.product}` },
+          { status: 404 }
+        );
+      }
       amount += product.offerPrice * item.quantity;
     }
     await inngest.send({
-      name: "order Created",
+      name: "order/created",
       data: {
         userId,
         items,
@@ -45,8 +61,8 @@ export async function POST(request) {
     );
   } catch (error) {
     console.log(error);
-    return new Response(
-      JSON.stringify({ success: false, message: error.message }),
+    return NextResponse.json(
+      { success: false, message: error.message },
       { status: 500 }
     );
   }
