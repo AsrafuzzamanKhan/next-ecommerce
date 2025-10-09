@@ -11,6 +11,7 @@ const addressSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+// Use lowercase model name to match other models' naming convention and refs
 const Address =
-  mongoose.models.Address || mongoose.model("Address", addressSchema);
+  mongoose.models.address || mongoose.model("address", addressSchema);
 export default Address;

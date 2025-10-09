@@ -16,8 +16,8 @@ import Footer from "@/components/Footer";
 const outfit = Outfit({ subsets: ["latin"], weight: ["300", "400", "500"] });
 
 export const metadata = {
-  title: "QuickCart - GreatStack",
-  description: "E-Commerce with Next.js ",
+  title: "Ilearnig solutions",
+  description: "ePlatform for learning",
 };
 
 export default function RootLayout({ children }) {
@@ -28,9 +28,9 @@ export default function RootLayout({ children }) {
           <Toaster />
 
           <AppContextProvider>
-            <Navbar />
+            {/* <Navbar /> */}
             {children}
-            <Footer />
+            {/* <Footer /> */}
           </AppContextProvider>
         </body>
       </html>

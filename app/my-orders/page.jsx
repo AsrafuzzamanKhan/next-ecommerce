@@ -25,11 +25,11 @@ const MyOrders = () => {
                     Authorization: `Bearer ${token}`
                 }
             })
-            if (data?.success) {
+            if (data.success) {
                 setOrders(data.orders.reverse());
                 setLoading(false);
             } else {
-                toast.error(data?.message);
+                toast.error(data.message);
             }
         } catch (error) {
             console.log(error);

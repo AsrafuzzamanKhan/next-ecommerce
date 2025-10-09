@@ -90,7 +90,7 @@ const Product = () => {
                             ${productData.price}
                         </span>
                     </p>
-                    <hr className="bg-gray-600 my-6" />
+                    {/* <hr className="bg-gray-600 my-6" />
                     <div className="overflow-x-auto">
                         <table className="table-auto border-collapse w-full max-w-72">
                             <tbody>
@@ -110,7 +110,7 @@ const Product = () => {
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div> */}
 
                     <div className="flex items-center mt-10 gap-4">
                         <button onClick={() => addToCart(productData._id)} className="w-full py-3.5 bg-gray-100 text-gray-800/80 hover:bg-gray-200 transition">
