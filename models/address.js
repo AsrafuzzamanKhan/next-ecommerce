@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const addressSchema = new mongoose.Schema(
   {
     userId: { type: String, required: true },
@@ -11,11 +12,8 @@ const addressSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-// Use lowercase model name to match other models' naming convention and refs
+
+// Use a consistent, capitalized model name and the mongoose.models check to avoid OverwriteModelError
 const Address =
-<<<<<<< HEAD
   mongoose.models.address || mongoose.model("address", addressSchema);
-=======
-  mongoose.models.Address || mongoose.model("address", addressSchema);
->>>>>>> 6f4a55c (address)
 export default Address;

@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 const OrderSummary = () => {
 
-  const { currency, router, getCartCount, getCartAmount, getToken, user, cart, setCartItems, cartItems } = useAppContext()
+  const { currency, router, getCartCount, getCartAmount, getToken, user, setCartItems, cartItems } = useAppContext()
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -73,7 +73,6 @@ const OrderSummary = () => {
     if (user) {
       fetchUserAddresses();
     }
-
   }, [user])
 
   return (

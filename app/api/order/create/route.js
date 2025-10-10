@@ -1,4 +1,4 @@
-import connectDB from "@/config/db";
+// import connectDB from "@/config/db";
 import { inngest } from "@/config/inngest";
 import Product from "@/models/Product";
 import User from "@/models/User";
@@ -8,10 +8,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
-    await connectDB();
-    if (!process.env.MONGODB_URI) {
-      console.error("MONGODB_URI is not set in environment");
-    }
+    // await connectDB();
+    // if (!process.env.MONGODB_URI) {
+    //   console.error("MONGODB_URI is not set in environment");
+    // }
     const { userId } = getAuth(request);
     if (!userId) {
       console.log("No userId found");
@@ -56,40 +56,14 @@ export async function POST(request) {
       },
     });
 
-    // Also create the order directly in the database as a fallback so orders
-    // are persisted even if Inngest processing is delayed or not running.
-    let createdOrder = null;
-    try {
-      createdOrder = await Order.create({
-        userId,
-        items,
-        amount: amount + Math.floor(amount * 0.02),
-        address,
-        date: Date.now(),
-      });
-    } catch (e) {
-      console.error("Failed to create Order directly:", e);
-      // proceed — Inngest may still create the order when it processes the event
-    }
-    //clear user cart if user exists
-    try {
-      const user = await User.findById(userId);
-      if (user) {
-        user.cartItems = {};
-        await user.save();
-      } else {
-        console.warn("User not found when trying to clear cart:", userId);
-      }
-    } catch (e) {
-      console.error("Failed to clear user cart:", e);
-    }
-
+    //  create user cart
+    const user = await User.findById(userId);
+    user.cartItems = {};
+    await user.save();
     return NextResponse.json(
       {
         success: true,
         message: "Order placed successfully",
-        orderId: createdOrder ? String(createdOrder._id) : null,
-        createdInDb: !!createdOrder,
       },
       { status: 200 }
     );

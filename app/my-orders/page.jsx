@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import { assets, orderDummyData } from "@/assets/assets";
+import { assets } from "@/assets/assets";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import Footer from "@/components/Footer";
@@ -20,7 +20,7 @@ const MyOrders = () => {
 
         try {
             const token = await getToken();
-            const { data } = await axios.get('/api/order/seller-orders', {
+            const { data } = await axios.get('/api/order/list', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
