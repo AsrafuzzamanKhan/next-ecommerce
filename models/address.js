@@ -13,5 +13,9 @@ const addressSchema = new mongoose.Schema(
 );
 // Use lowercase model name to match other models' naming convention and refs
 const Address =
+<<<<<<< HEAD
   mongoose.models.address || mongoose.model("address", addressSchema);
+=======
+  mongoose.models.Address || mongoose.model("address", addressSchema);
+>>>>>>> 6f4a55c (address)
 export default Address;
