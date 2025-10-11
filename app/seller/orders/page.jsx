@@ -23,7 +23,7 @@ const Orders = () => {
                 }
             })
             if (data.success) {
-                setOrders(data.orders);
+                setOrders(data.orders.reverse());
                 setLoading(false);
             } else {
                 toast.error(data?.message);
@@ -36,6 +36,7 @@ const Orders = () => {
 
     useEffect(() => {
         if (user) {
+            console.log('user', user);
             fetchSellerOrders();
         }
     }, [user]);
@@ -63,6 +64,9 @@ const Orders = () => {
                             <div>
                                 <p>
                                     <span className="font-medium">{order.address.fullName}</span>
+                                    <br />
+                                    <span className="font-medium">{user.primaryEmailAddress.emailAddress
+                                    }</span>
                                     <br />
                                     <span >{order.address.area}</span>
                                     <br />

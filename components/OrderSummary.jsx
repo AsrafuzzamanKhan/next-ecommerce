@@ -60,12 +60,12 @@ const OrderSummary = () => {
         setCartItems({})
         router.push('/order-placed')
       } else {
-        toast.error(data.message);
+        toast.error('data not available', data.message);
       }
 
     } catch (error) {
       console.log(error);
-      toast.error(error.message);
+      toast.error('error ', error.message);
     }
   }
 
