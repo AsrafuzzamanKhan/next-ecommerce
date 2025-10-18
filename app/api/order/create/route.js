@@ -20,10 +20,23 @@ export async function POST(request) {
         { status: 401 }
       );
     }
+
+    // find user by ID
+    const user = await User.findById(userId).select("email");
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: "User not found" },
+        { status: 404 }
+      );
+    }
     const { items, address } = await request.json();
     if (!address || !items || items.length === 0) {
       return NextResponse.json(
-        { success: false, message: "All fields are required" },
+        {
+          success: false,
+          email: user.email,
+          message: "All fields are required",
+        },
         { status: 400 }
       );
     }
@@ -49,6 +62,7 @@ export async function POST(request) {
       name: "order/created",
       data: {
         userId,
+        email: user.email,
         items,
         address,
         amount: amount + Math.floor(amount * 0.02),
@@ -57,7 +71,7 @@ export async function POST(request) {
     });
 
     //  create user cart
-    const user = await User.findById(userId);
+    // const user = await User.findById(userId);
     user.cartItems = {};
     await user.save();
     return NextResponse.json(
