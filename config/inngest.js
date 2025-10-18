@@ -1,5 +1,4 @@
 import { Inngest } from "inngest";
-
 import User from "@/models/User";
 import Order from "@/models/Order";
 import connectDB from "./db";

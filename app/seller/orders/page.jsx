@@ -65,8 +65,7 @@ const Orders = () => {
                                 <p>
                                     <span className="font-medium">{order.address.fullName}</span>
                                     <br />
-                                    <span className="font-medium">{user.primaryEmailAddress.emailAddress
-                                    }</span>
+                                    <span className="font-medium">{order?.email}</span>
                                     <br />
                                     <span >{order.address.area}</span>
                                     <br />

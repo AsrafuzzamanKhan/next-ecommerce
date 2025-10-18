@@ -1,5 +1,6 @@
 import connectDB from "@/config/db";
 import { inngest } from "@/config/inngest";
+import Order from "@/models/Order";
 import Product from "@/models/Product";
 import User from "@/models/User";
 
@@ -13,6 +14,7 @@ export async function POST(request) {
     //   console.error("MONGODB_URI is not set in environment");
     // }
     const { userId } = getAuth(request);
+    // const user = await User.findById(userId);
     if (!userId) {
       console.log("No userId found");
       return NextResponse.json(
@@ -21,14 +23,22 @@ export async function POST(request) {
       );
     }
 
-    // find user by ID
-    // const user = await User.findById(userId).select("email");
-    // if (!user) {
-    //   return NextResponse.json(
-    //     { success: false, message: "User not found" },
-    //     { status: 404 }
-    //   );
-    // }
+    // 2️⃣  Find the user in MongoDB
+    let user = await User.findById(userId);
+    if (!user) {
+      // fallback to Clerk if sync lagged
+      const clerkUser = await clerkClient.users.getUser(userId);
+      const userEmail = clerkUser.emailAddresses[0].emailAddress;
+
+      user = new User({
+        _id: userId,
+        email: userEmail,
+        name: `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim(),
+        imageUrl: clerkUser.imageUrl,
+        cartItems: {},
+      });
+      await user.save();
+    }
     const { items, address } = await request.json();
     if (!address || !items || items.length === 0) {
       return NextResponse.json(
@@ -58,20 +68,37 @@ export async function POST(request) {
       }
       amount += product.offerPrice * item.quantity;
     }
-    await inngest.send({
-      name: "order/created",
-      data: {
-        userId,
-        items,
-        address,
-        email: user.email,
-        amount: amount + Math.floor(amount * 0.02),
-        date: Date.now(),
-      },
+
+    // 5️⃣  Create order
+    const newOrder = await Order.create({
+      userId,
+      email: user.email,
+      items,
+      address,
+      amount: amount + Math.floor(amount * 0.02),
+      date: Date.now(),
     });
 
+    // 6️⃣  Send event to Inngest
+    await inngest.send({
+      name: "order/created",
+      data: { orderId: newOrder._id },
+    });
+
+    // await inngest.send({
+    //   name: "order/created",
+    //   data: {
+    //     userId,
+    //     items,
+    //     address,
+    //     email: user.email,
+    //     amount: amount + Math.floor(amount * 0.02),
+    //     date: Date.now(),
+    //   },
+    // });
+
     //  create user cart
-    const user = await User.findById(userId);
+    // const user = await User.findById(userId);
     user.cartItems = {};
     await user.save();
     return NextResponse.json(
